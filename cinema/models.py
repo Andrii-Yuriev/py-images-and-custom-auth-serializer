@@ -5,21 +5,13 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.conf import settings
 from django.utils.text import slugify
-from django.utils.deconstruct import deconstructible
 
 
-@deconstructible
-class MovieImageFilePath:
-    def __init__(self, sub_path):
-        self.sub_path = sub_path
-
-    def __call__(self, instance, filename):
-        _, ext = os.path.splitext(filename)
-        filename = f"{slugify(instance.title)}-{uuid.uuid4()}{ext}"
-        return os.path.join(self.sub_path, filename)
-
-
-movie_image_file_path = MovieImageFilePath("uploads/movies/")
+def movie_image_file_path_standalone(instance, filename):
+    _, ext = os.path.splitext(filename)
+    title_slug = slugify(instance.title if instance.title else "untitled")
+    filename = f"{title_slug}-{uuid.uuid4()}{ext}"
+    return os.path.join("uploads", "movies", filename)
 
 
 class CinemaHall(models.Model):
@@ -63,7 +55,7 @@ class Movie(models.Model):
     image = models.ImageField(
         null=True,
         blank=True,
-        upload_to=movie_image_file_path,
+        upload_to=movie_image_file_path_standalone,
     )
 
     class Meta:
