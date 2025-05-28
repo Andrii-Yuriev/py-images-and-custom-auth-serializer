@@ -1,5 +1,3 @@
-from idlelib.debugobj_r import remote_object_tree_item
-
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -27,9 +25,9 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
 
         if extra_fields.get("is_staff") is not True:
-            return ValueError(_("Superuser must have is_staff=True."))
+            raise ValueError(_("Superuser must have is_staff=True."))
         if extra_fields.get("is_superuser") is not True:
-            return ValueError(_("Superuser must have is_superuser=True."))
+            raise ValueError(_("Superuser must have is_superuser=True."))
 
         return self._create_user(email, password, **extra_fields)
 
