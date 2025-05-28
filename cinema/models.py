@@ -7,6 +7,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.utils.deconstruct import deconstructible
 
+
 @deconstructible
 class MovieImageFilePath:
     def __init__(self, sub_path):
@@ -17,7 +18,9 @@ class MovieImageFilePath:
         filename = f"{slugify(instance.title)}-{uuid.uuid4()}{ext}"
         return os.path.join(self.sub_path, filename)
 
+
 movie_image_file_path = MovieImageFilePath("uploads/movies/")
+
 
 class CinemaHall(models.Model):
     name = models.CharField(max_length=255)
